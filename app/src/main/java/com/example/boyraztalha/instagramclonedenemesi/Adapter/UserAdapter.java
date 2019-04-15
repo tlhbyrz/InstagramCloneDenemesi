@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.boyraztalha.instagramclonedenemesi.Fragment.ProfileFragment;
@@ -80,12 +81,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
             @Override
             public void onClick(View v) {
                 if (viewHolder.btnFollow.getText().toString().equals("follow")){
+                    Toast.makeText(context, "follow now", Toast.LENGTH_SHORT).show();
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
                             .child("following").child(user.getId()).setValue(true);
 
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(user.getId())
                             .child("followers").child(firebaseUser.getUid()).setValue(true);
                 }else {
+                    Toast.makeText(context, "following", Toast.LENGTH_SHORT).show();
                     FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
                             .child("following").child(user.getId()).removeValue();
 
@@ -119,6 +122,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
     }
 
     public void isFollowing(final String userId, final Button btnFollow){
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Follow")
                 .child(firebaseUser.getUid()).child("following");
 

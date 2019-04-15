@@ -35,9 +35,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         this.posts = posts;
     }
 
-    public PostAdapter() {
-    }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -46,20 +43,38 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        Post post = posts.get(i);
+        final Post post = posts.get(i);
+        System.out.println("post debug"+posts.size());
 
         Glide.with(context).load(post.getPostimage()).into(viewHolder.post_image);
 
-        if (viewHolder.description.equals("")){
+        if (post.getDescription().equals("")){
             viewHolder.description.setVisibility(View.GONE);
         }else {
             viewHolder.description.setVisibility(View.VISIBLE);
             viewHolder.description.setText(post.getDescription());
         }
 
+        publisherInfo(viewHolder.image_profile,viewHolder.username,viewHolder.publisher,post.getPublisher());
+
+        isLiked(viewHolder.post_image,post.getPostid());
+        number_of_likes(viewHolder.likes,post.getPostid());
+
+        viewHolder.like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (viewHolder.like.getTag().equals("liked")){
+                    FirebaseDatabase.getInstance().getReference().child("Likes")
+                            .child(post.getPostid()).child(firebaseUser.getUid()).removeValue();
+                }else {
+                    FirebaseDatabase.getInstance().getReference().child("Likes")
+                            .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
+                }
+            }
+        });
     }
 
     @Override
@@ -86,6 +101,46 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
             image_profile = itemView.findViewById(R.id.image_profile);
             post_image = itemView.findViewById(R.id.post_image);
         }
+    }
+
+    private void number_of_likes(final TextView textView, String postId){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Likes")
+                .child(postId);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                textView.setText(dataSnapshot.getChildrenCount()+"likes");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("Postu yuklemede hata olustu.(Post Adapter)");
+            }
+        });
+    }
+
+    private void isLiked(final ImageView imageView, String postId){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Likes")
+                .child(postId);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(firebaseUser.getUid()).exists()){
+                    imageView.setImageResource(R.drawable.ic_liked);
+                    imageView.setTag("liked");
+                }else {
+                    imageView.setImageResource(R.drawable.ic_post_fav);
+                    imageView.setTag("like");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("Postu yuklemede hata olustu.(Post Adapter)");
+            }
+        });
     }
 
     private void publisherInfo(final ImageView image_profile, final TextView username, final TextView publisher, String userId){
