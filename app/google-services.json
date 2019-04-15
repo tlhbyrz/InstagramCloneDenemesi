@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "574349457920",
+    "firebase_url": "https://instagramclonedenemesi-b9a6d.firebaseio.com",
+    "project_id": "instagramclonedenemesi-b9a6d",
+    "storage_bucket": "instagramclonedenemesi-b9a6d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:574349457920:android:ba247b5e23a3d935",
+        "android_client_info": {
+          "package_name": "com.example.boyraztalha.instagramclonedenemesi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "574349457920-qjqrha5t5v5rrfkg83gismmfpr6ntcom.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.boyraztalha.instagramclonedenemesi",
+            "certificate_hash": "fdd55ac8a406fe5924a3d7b526b31bac05985850"
+          }
+        },
+        {
+          "client_id": "574349457920-vrc9rrta0i9u4pv2q77bi89hpm2dv8cj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfXR33T26QQspn-0PQPPI_yxd6qF6AxSo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "574349457920-vrc9rrta0i9u4pv2q77bi89hpm2dv8cj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
