@@ -50,6 +50,8 @@ public class HomeFragment extends Fragment {
         postAdapter = new PostAdapter(getContext(),posts);
         recyclerView.setAdapter(postAdapter);
 
+        check_folowing();
+
         return view;
     }
 
@@ -58,7 +60,7 @@ public class HomeFragment extends Fragment {
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Follow")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child("followings");
+                .child("following");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
