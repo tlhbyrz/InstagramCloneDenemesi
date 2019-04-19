@@ -52,6 +52,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         final Comment comment = comments.get(i);
 
         get_user_info(viewHolder.image_profile,viewHolder.username,comment.getPublisherid());
+        viewHolder.comment.setText(comment.getComment());
+
         viewHolder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

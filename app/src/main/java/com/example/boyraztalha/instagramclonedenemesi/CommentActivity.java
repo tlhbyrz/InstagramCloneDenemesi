@@ -134,7 +134,7 @@ public class CommentActivity extends AppCompatActivity {
 
         HashMap<String,Object> hashMap = new HashMap<>();
         hashMap.put("comment",editComment.getText().toString());
-        hashMap.put("publisher",publisherId);
+        hashMap.put("publisherid",firebaseUser.getUid());
 
         reference.push().setValue(hashMap);
         editComment.setText("");
