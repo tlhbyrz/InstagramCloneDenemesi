@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             String publisher = intent.getString("publisherid");
 
             SharedPreferences.Editor editor = getSharedPreferences("PREFS",MODE_PRIVATE).edit();
-            editor.putString("publisherid",publisher);
+            editor.putString("profileid",publisher);
             editor.apply();
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.nav_person:
                     SharedPreferences.Editor editor = getSharedPreferences("PREFS",MODE_PRIVATE).edit();
-                    editor.putString("profileId",FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    editor.putString("profileid",FirebaseAuth.getInstance().getCurrentUser().getUid());
                     editor.apply();
                     selectedFragment = new ProfileFragment();
                     break;
