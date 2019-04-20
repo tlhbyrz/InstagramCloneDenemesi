@@ -1,5 +1,7 @@
 # InstagramCloneDenemesi
 
+Neden Clone???? --- Cevap yok
+
 Basit bir sekilde instagram klonu olusturmaya calisiyorum.
 
 Firebasenin realtime databases, Storage, Authentation ozellliklerini kullaniyorum.
