@@ -2,4 +2,6 @@
 
 Basit bir sekilde instagram klonu olusturmaya calisiyorum.
 
-Firebasenin real time databases, Storadge, Autentation ozellliklerini kullaniyorum.
+Firebasenin realtime databases, Storage, Authentation ozellliklerini kullaniyorum.
+
+Glide, Circle Imageview gibi 3.part github kutuphanelerinden yardim aliyorum.
