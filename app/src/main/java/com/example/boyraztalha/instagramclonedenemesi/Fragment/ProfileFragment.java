@@ -6,6 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.boyraztalha.instagramclonedenemesi.Adapter.MyfotosAdapter;
 import com.example.boyraztalha.instagramclonedenemesi.Model.Post;
 import com.example.boyraztalha.instagramclonedenemesi.Model.User;
 import com.example.boyraztalha.instagramclonedenemesi.R;
@@ -25,6 +29,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class ProfileFragment extends Fragment {
@@ -37,6 +45,16 @@ public class ProfileFragment extends Fragment {
     String profileid;
 
     ImageButton my_fotos,saved_fotos;
+
+    RecyclerView recyclerView;
+    MyfotosAdapter myfotosAdapter;
+    List<Post> myPosts;
+
+    List<String> mySaves;
+
+    RecyclerView recyclerView_saved;
+    MyfotosAdapter myfotosAdapter_saved;
+    List<Post> myPosts_saved;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,9 +79,28 @@ public class ProfileFragment extends Fragment {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
+        recyclerView.setLayoutManager(layoutManager);
+        myPosts = new ArrayList<>();
+        myfotosAdapter = new MyfotosAdapter(getContext(),myPosts);
+
+        recyclerView_saved = view.findViewById(R.id.recycler_view_save);
+        recyclerView_saved.setHasFixedSize(true);
+        LinearLayoutManager layoutManager_saved = new GridLayoutManager(getContext(),3);
+        recyclerView_saved.setLayoutManager(layoutManager);
+        myPosts_saved = new ArrayList<>();
+        myfotosAdapter_saved = new MyfotosAdapter(getContext(),myPosts);
+
+        recyclerView.setVisibility(View.VISIBLE);
+        recyclerView_saved.setVisibility(View.GONE);
+
         get_user_info();
         get_number_of_posts();
         get_follow_infos();
+        get_my_posts_for_fotos();
+        get_id_of_saved_fotos();
 
         if (firebaseUser.getUid().equals(profileid)){
             edit_profile.setText("Edit profile");
@@ -96,7 +133,97 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        my_fotos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.setVisibility(View.VISIBLE);
+                recyclerView_saved.setVisibility(View.GONE);
+            }
+        });
+
+        saved_fotos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.setVisibility(View.GONE);
+                recyclerView_saved.setVisibility(View.VISIBLE);
+            }
+        });
+
         return view;
+    }
+
+
+
+    private void get_id_of_saved_fotos(){
+        mySaves = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Saves")
+                .child(profileid);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    mySaves.add(snapshot.getKey());
+                }
+
+                read_saves();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void read_saves() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                myPosts_saved.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Post post = snapshot.getValue(Post.class);
+
+                    for (String id : mySaves){
+                        if (post.getPostid().equals(id)){
+                            myPosts_saved.add(post);
+                        }
+                    }
+                }
+                myfotosAdapter_saved.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void get_my_posts_for_fotos(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                myPosts.clear();
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    Post post = snapshot.getValue(Post.class);
+                    if (post.getPublisher().equals(profileid)){
+                        myPosts.add(post);
+                    }
+                }
+                Collections.reverse(myPosts);
+                myfotosAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void check_following(){
