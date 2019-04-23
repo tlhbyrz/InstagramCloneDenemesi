@@ -89,7 +89,7 @@ public class ProfileFragment extends Fragment {
         recyclerView_saved = view.findViewById(R.id.recycler_view_save);
         recyclerView_saved.setHasFixedSize(true);
         LinearLayoutManager layoutManager_saved = new GridLayoutManager(getContext(),3);
-        recyclerView_saved.setLayoutManager(layoutManager);
+        recyclerView_saved.setLayoutManager(layoutManager_saved);
         myPosts_saved = new ArrayList<>();
         myfotosAdapter_saved = new MyfotosAdapter(getContext(),myPosts);
 
