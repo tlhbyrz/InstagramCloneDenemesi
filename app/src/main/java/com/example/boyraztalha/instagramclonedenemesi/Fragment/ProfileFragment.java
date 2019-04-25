@@ -32,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -121,6 +122,8 @@ public class ProfileFragment extends Fragment {
                     FirebaseDatabase.getInstance().getReference("Follow").child(profileid)
                             .child("followers").child(firebaseUser.getUid()).setValue(true);
 
+                    add_notification();
+
                 }else if(btn_current.equals("following")){
                     FirebaseDatabase.getInstance().getReference("Follow").child(firebaseUser.getUid())
                             .child("following").child(profileid).removeValue();
@@ -152,7 +155,18 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+    private void add_notification(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Notifications")
+                .child(profileid);
 
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("userid",firebaseUser.getUid());
+        hashMap.put("postid","");
+        hashMap.put("text","started following you");
+        hashMap.put("ispost",false);
+
+        reference.push().setValue(hashMap);
+    }
 
     private void get_id_of_saved_fotos(){
         mySaves = new ArrayList<>();

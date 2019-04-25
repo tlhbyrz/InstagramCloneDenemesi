@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
@@ -143,6 +144,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
                 }else {
                     FirebaseDatabase.getInstance().getReference().child("Likes")
                             .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
+                    add_notification(post.getPublisher(),post.getPostid());
                 }
             }
         });
@@ -156,6 +158,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
                 context.startActivity(i);
             }
         });
+    }
+
+    private void add_notification(String userid, String postid){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Notifications")
+                .child(userid);
+
+        HashMap<String, Object>hashMap = new HashMap<>();
+        hashMap.put("userid",firebaseUser.getUid());
+        hashMap.put("postid",postid);
+        hashMap.put("text","liked your post");
+        hashMap.put("ispost",true);
+
+        reference.push().setValue(hashMap);
     }
 
     private void get_post_is_saved(final String postid, final ImageView imageView){

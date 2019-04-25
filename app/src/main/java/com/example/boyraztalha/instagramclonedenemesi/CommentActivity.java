@@ -92,6 +92,31 @@ public class CommentActivity extends AppCompatActivity {
         read_comments();
     }
 
+    private void add_Comment() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Comments").child(postId);
+
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("comment",editComment.getText().toString());
+        hashMap.put("publisherid",firebaseUser.getUid());
+
+        reference.push().setValue(hashMap);
+        add_notification();
+        editComment.setText("");
+    }
+
+    private void add_notification(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Notifications")
+                .child(publisherId);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("userid",firebaseUser.getUid());
+        hashMap.put("postid",postId);
+        hashMap.put("text","commented"+ editComment.getText().toString());
+        hashMap.put("ispost",true);
+
+        reference.push().setValue(hashMap);
+    }
+
     private void read_comments(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Comments").child(postId);
 
@@ -127,16 +152,5 @@ public class CommentActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void add_Comment() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Comments").child(postId);
-
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put("comment",editComment.getText().toString());
-        hashMap.put("publisherid",firebaseUser.getUid());
-
-        reference.push().setValue(hashMap);
-        editComment.setText("");
     }
 }
