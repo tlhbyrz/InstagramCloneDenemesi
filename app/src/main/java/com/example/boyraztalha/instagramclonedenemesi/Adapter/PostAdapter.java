@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.boyraztalha.instagramclonedenemesi.CommentActivity;
+import com.example.boyraztalha.instagramclonedenemesi.FollowersActivity;
 import com.example.boyraztalha.instagramclonedenemesi.Fragment.PostDetailFragment;
 import com.example.boyraztalha.instagramclonedenemesi.Fragment.ProfileFragment;
 import com.example.boyraztalha.instagramclonedenemesi.Model.Post;
@@ -146,6 +147,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
                             .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
                     add_notification(post.getPublisher(),post.getPostid());
                 }
+            }
+        });
+
+        viewHolder.likes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context,FollowersActivity.class);
+                i.putExtra("id",post.getPostid());
+                i.putExtra("title","likes");
+                context.startActivity(i);
             }
         });
 

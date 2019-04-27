@@ -1,6 +1,7 @@
 package com.example.boyraztalha.instagramclonedenemesi.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.boyraztalha.instagramclonedenemesi.Adapter.MyfotosAdapter;
+import com.example.boyraztalha.instagramclonedenemesi.EditProfileActivity;
+import com.example.boyraztalha.instagramclonedenemesi.FollowersActivity;
 import com.example.boyraztalha.instagramclonedenemesi.Model.Post;
 import com.example.boyraztalha.instagramclonedenemesi.Model.User;
 import com.example.boyraztalha.instagramclonedenemesi.R;
@@ -131,7 +134,8 @@ public class ProfileFragment extends Fragment {
                             .child("followers").child(firebaseUser.getUid()).removeValue();
 
                 }else if(btn_current.equals("Edit profile")){
-                    //TODO Edit ekranini hazirlayip oraya salacagiz.
+                    Intent intent = new Intent(getContext(),EditProfileActivity.class);
+                    startActivity(intent);
                 }
             }
         });
@@ -149,6 +153,26 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 recyclerView.setVisibility(View.GONE);
                 recyclerView_saved.setVisibility(View.VISIBLE);
+            }
+        });
+
+        followers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(),FollowersActivity.class);
+                i.putExtra("id",profileid);
+                i.putExtra("title","followers");
+                startActivity(i);
+            }
+        });
+
+        following.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(),FollowersActivity.class);
+                i.putExtra("id",profileid);
+                i.putExtra("title","following");
+                startActivity(i);
             }
         });
 
