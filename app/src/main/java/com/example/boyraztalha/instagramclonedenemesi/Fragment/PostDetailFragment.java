@@ -1,6 +1,7 @@
 package com.example.boyraztalha.instagramclonedenemesi.Fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,11 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.boyraztalha.instagramclonedenemesi.Adapter.NotificationAdapter;
-import com.example.boyraztalha.instagramclonedenemesi.Model.NotificationModel;
+import com.example.boyraztalha.instagramclonedenemesi.Adapter.PostAdapter;
+import com.example.boyraztalha.instagramclonedenemesi.Model.Post;
 import com.example.boyraztalha.instagramclonedenemesi.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,52 +22,51 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class NotificationFragment extends Fragment {
 
+public class PostDetailFragment extends Fragment {
+
+    String postid;
+
+    PostAdapter postAdapter;
     RecyclerView recyclerView;
-    NotificationAdapter notificationAdapter;
-    List<NotificationModel> notifications;
-
-    FirebaseUser firebaseUser;
+    List<Post> posts;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_notification, container, false);
+        View view = inflater.inflate(R.layout.fragment_post_detail, container, false);
+
+        SharedPreferences preferences = getContext().getSharedPreferences("PREFS",Context.MODE_PRIVATE);
+        postid = preferences.getString("postid","none");
 
         recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        notifications = new ArrayList<>();
-        notificationAdapter = new NotificationAdapter(getContext(),notifications);
-        recyclerView.setAdapter(notificationAdapter);
+        posts = new ArrayList<>();
+        postAdapter = new PostAdapter(getContext(),posts);
+        recyclerView.setAdapter(postAdapter);
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        read_notifications();
+        read_post();
 
         return view;
     }
 
-    private void read_notifications() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications")
-                .child(firebaseUser.getUid());
+    private void read_post() {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts").child(postid);
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                notifications.clear();
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    NotificationModel model = snapshot.getValue(NotificationModel.class);
-                    notifications.add(model);
-                }
+                posts.clear();
+                Post post = dataSnapshot.getValue(Post.class);
+                posts.add(post);
 
-                Collections.reverse(notifications);
-                notificationAdapter.notifyDataSetChanged();
+                postAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -76,6 +74,7 @@ public class NotificationFragment extends Fragment {
 
             }
         });
+
     }
 
 }
