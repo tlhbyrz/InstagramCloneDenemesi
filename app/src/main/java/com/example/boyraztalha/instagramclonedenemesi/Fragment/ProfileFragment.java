@@ -24,6 +24,7 @@ import com.example.boyraztalha.instagramclonedenemesi.EditProfileActivity;
 import com.example.boyraztalha.instagramclonedenemesi.FollowersActivity;
 import com.example.boyraztalha.instagramclonedenemesi.Model.Post;
 import com.example.boyraztalha.instagramclonedenemesi.Model.User;
+import com.example.boyraztalha.instagramclonedenemesi.OptionsActivity;
 import com.example.boyraztalha.instagramclonedenemesi.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -173,6 +174,13 @@ public class ProfileFragment extends Fragment {
                 i.putExtra("id",profileid);
                 i.putExtra("title","following");
                 startActivity(i);
+            }
+        });
+
+        options.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(),OptionsActivity.class));
             }
         });
 

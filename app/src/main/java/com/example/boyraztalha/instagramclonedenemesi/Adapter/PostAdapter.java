@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.boyraztalha.instagramclonedenemesi.CommentActivity;
 import com.example.boyraztalha.instagramclonedenemesi.FollowersActivity;
 import com.example.boyraztalha.instagramclonedenemesi.Fragment.PostDetailFragment;
@@ -59,7 +60,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder>{
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         final Post post = posts.get(i);
 
-        Glide.with(context).load(post.getPostimage()).into(viewHolder.post_image);
+        Glide.with(context).load(post.getPostimage()).apply(new RequestOptions().placeholder(R.drawable.placeholder))
+                .into(viewHolder.post_image);
 
         if (post.getDescription().equals("")){
             viewHolder.description.setVisibility(View.GONE);

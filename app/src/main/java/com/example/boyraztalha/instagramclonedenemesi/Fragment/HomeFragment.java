@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.boyraztalha.instagramclonedenemesi.Adapter.PostAdapter;
 import com.example.boyraztalha.instagramclonedenemesi.Model.Post;
@@ -33,11 +34,15 @@ public class HomeFragment extends Fragment {
 
     List<String> followingList;
 
+    ProgressBar progressBar;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        progressBar = view.findViewById(R.id.progress);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setReverseLayout(true);
@@ -96,6 +101,7 @@ public class HomeFragment extends Fragment {
                     }
                 }
                 postAdapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
