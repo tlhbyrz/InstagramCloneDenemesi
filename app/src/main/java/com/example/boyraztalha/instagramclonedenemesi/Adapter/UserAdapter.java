@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.boyraztalha.instagramclonedenemesi.Fragment.ProfileFragment;
@@ -68,7 +69,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
             @Override
             public void onClick(View v) {
                 SharedPreferences.Editor editor = context.getSharedPreferences("PREFS",Context.MODE_PRIVATE).edit();
-                editor.putString("userId",user.getId());
+                editor.putString("profileid",user.getId());
                 editor.apply();
 
                 ((FragmentActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -119,6 +120,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
     }
 
     public void isFollowing(final String userId, final Button btnFollow){
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Follow")
                 .child(firebaseUser.getUid()).child("following");
 
@@ -127,9 +130,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.child(userId).exists()){
-                    btnFollow.setText("Following");
+                    btnFollow.setText("following");
                 }else{
-                    btnFollow.setText("Follow");
+                    btnFollow.setText("follow");
                 }
 
             }
